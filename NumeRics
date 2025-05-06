@@ -1,0 +1,65 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <bitset>  // для удобного бинарного вывода
+
+using namespace std;
+
+// Включить или выключить вывод бинарного представления 
+#define BINARY
+
+int main()
+{
+    setlocale(LC_ALL, "");
+
+    int decimal;
+    cout << "Введите десятичное число: ";
+    cin >> decimal;
+
+    // Проверка на корректность ввода
+    if (!cin)
+    {
+        cout << "Ошибка ввода!" << endl;
+        return 1;
+    }
+
+#ifdef BINARY
+    // Вывод бинарного представления через std::bitset (читабельно и компактно)
+    const size_t n = sizeof(int) * 8; // Размер int в битах (обычно 32)
+    bitset<n> binary(decimal);
+
+    // Форматируем вывод, разделяя по 4 и 8 битам для удобства чтения
+    for (int i = n - 1; i >= 0; --i)
+    {
+        cout << binary[i];
+        if (i % 8 == 0) cout << " ";  // разделитель каждые 8 бит
+        else if (i % 4 == 0) cout << " "; // дополнительные разделители каждые 4 бита
+    }
+    cout << endl;
+#endif
+
+    // Вывод в шестнадцатеричной системе
+    // Используем std::stringstream для более чистого решения
+    if (decimal == 0) {
+        cout << 0 << endl;
+    }
+    else
+    {
+        string hexStr;
+        unsigned int temp = static_cast<unsigned int>(decimal); // на случай отрицательных чисел
+
+        // Формируем строку с помощью карты цифр
+        const char* hexDigits = "0123456789ABCDEF";
+        while (temp > 0)
+        {
+            hexStr += hexDigits[temp % 16];
+            temp /= 16;
+        }
+
+        // Переворачиваем строку, т.к. получаем ее в обратном порядке
+        reverse(hexStr.begin(), hexStr.end());
+        cout << hexStr << endl;
+    }
+
+    return 0;
+}
